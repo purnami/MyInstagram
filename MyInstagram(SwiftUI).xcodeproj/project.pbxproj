@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		813389682CE086BE0035F8CB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 813389672CE086BE0035F8CB /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		813389552CE086840035F8CB /* MyInstagram(SwiftUI).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MyInstagram(SwiftUI).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				813389682CE086BE0035F8CB /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = "MyInstagram(SwiftUI)";
 			packageProductDependencies = (
+				813389672CE086BE0035F8CB /* Kingfisher */,
 			);
 			productName = "MyInstagram(SwiftUI)";
 			productReference = 813389552CE086840035F8CB /* MyInstagram(SwiftUI).app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 8133894C2CE086840035F8CB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				813389662CE086BE0035F8CB /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 813389562CE086840035F8CB /* Products */;
 			projectDirPath = "";
@@ -324,6 +333,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		813389662CE086BE0035F8CB /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		813389672CE086BE0035F8CB /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 813389662CE086BE0035F8CB /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8133894D2CE086840035F8CB /* Project object */;
 }
