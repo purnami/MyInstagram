@@ -13,12 +13,14 @@ class UserViewModel : ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     
+    
+    
 //    func fetchUsers() {
 //            self.isLoading = true
 //            self.errorMessage = nil
 //            
 //            // Simulated API call (fake delay and response)
-//            DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+//        Dispatch.DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
 //                let fetchedUsers = [
 //                    User(id: 1, name: "John Doe", email: "john.doe@example.com"),
 //                    User(id: 2, name: "Jane Smith", email: "jane.smith@example.com"),
@@ -31,4 +33,11 @@ class UserViewModel : ObservableObject {
 //                }
 //            }
 //        }
+//    
+//    let workItem = DispatchWorkItem {
+//        print("This is the delayed work item being executed.")
+//    }
+//
+//    // Execute the work item after a 2-second delay
+//    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: workItem)
 }

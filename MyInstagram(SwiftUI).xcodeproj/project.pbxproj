@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		813389682CE086BE0035F8CB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 813389672CE086BE0035F8CB /* Kingfisher */; };
+		813389962CE0AA3F0035F8CB /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 813389952CE0AA3F0035F8CB /* FirebaseAnalytics */; };
+		813389982CE0AA3F0035F8CB /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 813389972CE0AA3F0035F8CB /* FirebaseAuth */; };
+		8133899A2CE0AA3F0035F8CB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 813389992CE0AA3F0035F8CB /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +30,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				813389962CE0AA3F0035F8CB /* FirebaseAnalytics in Frameworks */,
+				8133899A2CE0AA3F0035F8CB /* FirebaseFirestore in Frameworks */,
+				813389982CE0AA3F0035F8CB /* FirebaseAuth in Frameworks */,
 				813389682CE086BE0035F8CB /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +77,9 @@
 			name = "MyInstagram(SwiftUI)";
 			packageProductDependencies = (
 				813389672CE086BE0035F8CB /* Kingfisher */,
+				813389952CE0AA3F0035F8CB /* FirebaseAnalytics */,
+				813389972CE0AA3F0035F8CB /* FirebaseAuth */,
+				813389992CE0AA3F0035F8CB /* FirebaseFirestore */,
 			);
 			productName = "MyInstagram(SwiftUI)";
 			productReference = 813389552CE086840035F8CB /* MyInstagram(SwiftUI).app */;
@@ -102,6 +111,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				813389662CE086BE0035F8CB /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				813389942CE0AA3F0035F8CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 813389562CE086840035F8CB /* Products */;
@@ -274,7 +284,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.purnami.MyInstagram-SwiftUI-";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.purnami.MyInstagram-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -303,7 +313,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.purnami.MyInstagram-SwiftUI-";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.purnami.MyInstagram-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -343,6 +353,14 @@
 				minimumVersion = 8.1.0;
 			};
 		};
+		813389942CE0AA3F0035F8CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -350,6 +368,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 813389662CE086BE0035F8CB /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		813389952CE0AA3F0035F8CB /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 813389942CE0AA3F0035F8CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		813389972CE0AA3F0035F8CB /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 813389942CE0AA3F0035F8CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		813389992CE0AA3F0035F8CB /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 813389942CE0AA3F0035F8CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
