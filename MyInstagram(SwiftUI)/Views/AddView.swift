@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddView: View {
+    @StateObject private var firestoreManager = FirestoreManager()
     var body: some View {
         NavigationView {
             VStack {
@@ -16,7 +17,12 @@ struct AddView: View {
                     .padding()
                 Spacer()
             }
-            .navigationTitle("Add") 
+            .onAppear {
+                Task {
+                    await firestoreManager.addContent()
+                }
+            }
+            .navigationTitle("Add")
         }
     }
 }

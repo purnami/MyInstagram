@@ -9,10 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var userViewModel = UserViewModel()
+//    @StateObject private var firestoreManager = FirestoreManager()
+    
     var body: some View {
         TabView {
             HomeView()
                 .tabItem {
+                    
                     Image(systemName: "house.fill")
                 }
             AddView()

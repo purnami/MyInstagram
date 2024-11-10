@@ -9,9 +9,9 @@ import Foundation
 import Combine
 
 class UserViewModel : ObservableObject {
-    @Published var users: [User] = []
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String? = nil
+//    @Published var users: [User] = []
+//    @Published var isLoading: Bool = false
+//    @Published var errorMessage: String? = nil
     
     
     

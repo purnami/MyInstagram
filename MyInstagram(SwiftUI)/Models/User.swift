@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct User: Identifiable, Codable {
-    var id: Int
+//struct User: Identifiable, Codable {
+struct Co{
+    var user_name : String
     var name: String
 }
