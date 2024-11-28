@@ -27,89 +27,8 @@ struct SearchView: View {
                     }
             }else {
                 VStack{
-                    HStack {
-                        if isSearchFieldFocused {
-                            Image(systemName: "arrow.left")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .padding(.leading, 20)
-                                .onTapGesture {
-                                    isSearchFieldFocused = false
-                                    viewModel.keyword = ""
-                                }
-                        }
-                        
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 17, height: 17)
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 10)
-                            TextField("Search", text: $viewModel.keyword)
-                                .font(.system(size: 17))
-                                .textFieldStyle(PlainTextFieldStyle())
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                                .focused($isSearchFieldFocused)
-                                .onChange(of: viewModel.keyword) { _ , newValue in
-                                    viewModel.fetchUsers()
-                                }
-                            if !viewModel.keyword.isEmpty {
-                                Image(systemName: "xmark")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 8, height: 8)
-                                    .padding(.trailing, 5)
-                                    .onTapGesture {
-                                        viewModel.keyword = ""
-                                    }
-                            }
-                        }
-                        .padding(10)
-                        .background(Color(hex: "#f4f5f7"))
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-                    }
-                    ZStack {
-                        if !isSearchFieldFocused {
-                            VStack {
-                                imageGrid()
-                                Spacer()
-                            }
-                        }else {
-                            ScrollView {
-                                VStack(spacing: 20) {
-                                    ForEach(viewModel.searchResults, id: \.username) { user in
-                                        HStack {
-                                            let profileImage = user.profileImage != nil ? user.profileImage : UIImage(systemName: "person.crop.circle.fill")
-                                            
-                                            Image(uiImage: (profileImage ?? UIImage(systemName: "person.crop.circle.fill"))!)
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fill)
-                                                .frame(width: 50, height: 50)
-                                                .clipShape(.circle)
-                                                .padding(.trailing, 5)
-                                            
-                                            Text("\(user.username)")
-                                                .font(.system(size: 17))
-                                            //                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .background(Color(.systemBackground))
-                                        .onTapGesture {
-                                            print(user.username)
-                                            showProfileView = true
-                                            profileUserClicked = user
-                                        }
-                                    }
-                                }
-                                .padding()
-                            }
-                        }
-                        
-                    }
+                    searchBar
+                    contentView
                     Spacer()
                 }
                 .onAppear {
@@ -119,7 +38,112 @@ struct SearchView: View {
         }
     }
     
-    private func imageGrid() -> some View {
+    private var searchBar : some View {
+        HStack {
+            backButton
+            searchField
+        }
+        .padding(.horizontal)
+    }
+    
+    private var backButton : some View {
+        Group {
+            if isSearchFieldFocused {
+                Image(systemName: "arrow.left")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+                    .padding(.leading, 20)
+                    .onTapGesture {
+                        isSearchFieldFocused = false
+                        viewModel.keyword = ""
+                    }
+            }
+        }
+    }
+    
+    private var searchField : some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 17, height: 17)
+                .foregroundColor(.gray)
+                .padding(.horizontal, 10)
+            TextField("Search", text: $viewModel.keyword)
+                .font(.system(size: 17))
+                .textFieldStyle(PlainTextFieldStyle())
+                .autocapitalization(.none)
+                .disableAutocorrection(true)
+                .focused($isSearchFieldFocused)
+                .onChange(of: viewModel.keyword) { _ , newValue in
+                    viewModel.fetchUsers()
+                }
+            if !viewModel.keyword.isEmpty {
+                Image(systemName: "xmark")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 8, height: 8)
+                    .padding(.trailing, 5)
+                    .onTapGesture {
+                        viewModel.keyword = ""
+                    }
+            }
+        }
+        .padding(10)
+        .background(Color(hex: "#f4f5f7"))
+        .cornerRadius(10)
+    }
+    
+    private var contentView : some View {
+        ZStack {
+            if !isSearchFieldFocused {
+                imageGrid
+//                VStack {
+//                    imageGrid
+//                    Spacer()
+//                }
+            }else {
+                userSearchResults
+            }
+            
+        }
+    }
+    
+    private var userSearchResults : some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                ForEach(viewModel.searchResults, id: \.username) { user in
+                    userRow(user : user)
+                }
+            }
+            .padding()
+        }
+    }
+    
+    private func userRow(user : ProfileUser) -> some View {
+        HStack {
+            let profileImage = user.profileImage ?? UIImage(systemName: "person.crop.circle.fill")
+            Image(uiImage: profileImage!)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 50, height: 50)
+                .clipShape(.circle)
+                .padding(.trailing, 5)
+            
+            Text("\(user.username)")
+                .font(.system(size: 17))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.systemBackground))
+        .onTapGesture {
+            print(user.username)
+            showProfileView = true
+            profileUserClicked = user
+        }
+    }
+    
+    private var imageGrid : some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 1) {
                 ForEach(pixabayViewModel.images) { image in
