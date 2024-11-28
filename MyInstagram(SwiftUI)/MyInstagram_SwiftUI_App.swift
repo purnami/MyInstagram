@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseAuth
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -19,6 +20,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
       
       print(db)
       
+      print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last)
+      
       return true
   }
 }
@@ -27,10 +30,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct MyInstagram_SwiftUI_App: App {
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
+//    init() {
+//            FirebaseApp.configure()  // Initialize Firebase
+//        }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+//            ContentView()
+            LoginView()
+//            TurtleRock()
         }
     }
 }

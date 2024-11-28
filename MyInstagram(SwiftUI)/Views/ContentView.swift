@@ -8,26 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var userViewModel = UserViewModel()
-//    @StateObject private var firestoreManager = FirestoreManager()
     
-    var body: some View {
-        TabView {
-            HomeView()
-                .tabItem {
-                    
-                    Image(systemName: "house.fill")
-                }
-            AddView()
-                .tabItem {
-                    Image(systemName: "plus")
-                }
-            ProfileView()
-                .tabItem {
-                    Image(systemName: "person.fill")
-                }
+    @State private var selectedTab: Int = 0
+
+        var body: some View {
+            TabView(selection: $selectedTab) {
+                HomeView()
+                    .tabItem {
+                        Image(systemName: "house")
+                    }
+                    .tag(0)
+                
+                SearchView()
+                    .tabItem {
+                        Image(systemName: "magnifyingglass")
+                    }
+                    .tag(1)
+                
+                AddView()
+                    .tabItem {
+                        Image(systemName: "plus.app")
+                    }
+                    .tag(2)
+                
+                ProfileView(showProfileView: .constant(false), profileUser: .constant(ProfileUser()))
+                    .tabItem {
+                        Image(systemName: "person.crop.circle")
+                    }
+                    .tag(3)
+            }
+            .accentColor(.black)
+            .navigationBarBackButtonHidden(true)
         }
-    }
 }
 
 #Preview {
