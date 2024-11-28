@@ -166,7 +166,6 @@ struct ProfileView: View {
                     Text("\(stat.1)") // Count
                     Text(stat.0)     // Label
                 }
-//                Spacer()
                 if stat.0 != "following" { Spacer() } // Add space between items, except after "following"
             }
         }
@@ -297,7 +296,6 @@ struct MenuView: View {
     @ObservedObject var viewModel: ProfileViewModel
     
     @State private var showPopup = false
-    @State private var message = "Log out of your account?"
     
     @StateObject private var firestoreManager = FirestoreManager()
     @Environment(\.dismiss) var dismiss
@@ -305,15 +303,7 @@ struct MenuView: View {
     var body: some View {
         ZStack {
             VStack {
-                Button {
-                    print("logout button")
-                    showPopup = true
-                } label: {
-                    Text("Log out")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(.red)
-                }
-                .padding()
+                logoutButton
                 Spacer()
             }
             
@@ -334,48 +324,61 @@ struct MenuView: View {
         
     }
     
+    private var logoutButton : some View{
+        Button {
+            print("logout button")
+            showPopup = true
+        } label: {
+            Text("Log out")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(.red)
+        }
+        .padding()
+    }
+    
     private var popupDialog: some View {
         VStack(spacing: 20) {
-            Text(message)
+            Text("Log out of your account?")
                 .font(.system(size: 15))
                 .fontWeight(.semibold)
                 .padding(.top, 30)
                 .padding(.bottom, 10)
             Divider()
-            Button(action: {
-                dismiss()
-                viewModel.signOut()
-                withAnimation {
-                    showPopup = false
-                }
-            }) {
-                Text("Log out")
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.red)
-            }
+            logoutConfirmationButton
             Divider()
-            Button(action: {
-                withAnimation {
-                    showPopup = false
-                }
-            }) {
-                Text("Cancel")
-                    .frame(maxWidth: .infinity)
-            }
+            cancelButton
+            
             .padding(.bottom, 20)
         }
         .background(Color.white)
         .cornerRadius(15)
         .shadow(radius: 10)
         .padding(.horizontal, 75)
-//        .onChange(of: viewModel.navigateToLoginView) { oldValue, newValue in
-//            if newValue {
-//                dismiss()
-//            }
-//        }
-//        .navigationDestination(isPresented: $viewModel.navigateToLoginView) {
-//            LoginView()
-//        }
+    }
+    
+    private var logoutConfirmationButton : some View {
+        Button(action: {
+            dismiss()
+            viewModel.signOut()
+            withAnimation {
+                showPopup = false
+            }
+        }) {
+            Text("Log out")
+                .frame(maxWidth: .infinity)
+                .foregroundColor(.red)
+        }
+    }
+    
+    private var cancelButton : some View {
+        Button(action: {
+            withAnimation {
+                showPopup = false
+            }
+        }) {
+            Text("Cancel")
+                .frame(maxWidth: .infinity)
+        }
     }
 }
 
