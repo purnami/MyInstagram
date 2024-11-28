@@ -14,7 +14,6 @@ final class ProfileViewModel : ObservableObject {
     @Published var username: String = ""
     @Published var selectedTab = 0
     @Published var profileImage : UIImage?
-//    @Published var tryProfileImage : UIImage?
     @Published var photosPickerItem : PhotosPickerItem?
     @Published var postsArray: [Post] = []
     @Published var postsArrayOthers: [Post] = []
@@ -33,7 +32,6 @@ final class ProfileViewModel : ObservableObject {
         fetchUsername()
         fetchPosts()
         fetchImage(self.username)
-//        fetchProfileImage(self.username)
     }
     
     func fetchUsername() {
