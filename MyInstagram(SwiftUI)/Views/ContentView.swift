@@ -31,7 +31,8 @@ struct ContentView: View {
                     }
                     .tag(2)
                 
-                ProfileView(showProfileView: .constant(false), profileUser: .constant(ProfileUser()))
+//                ProfileView(showProfileView: .constant(false), profileUser: .constant(ProfileUser()))
+                ProfileView(showProfileView: .constant(false))
                     .tabItem {
                         Image(systemName: "person.crop.circle")
                     }

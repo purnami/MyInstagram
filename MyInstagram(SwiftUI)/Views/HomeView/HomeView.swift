@@ -16,7 +16,7 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     ForEach(viewModel.postsArrayOthers.sorted(by: { $0.datePost > $1.datePost })) { post in
-                        PostView(post: post)
+                        PostView(post: post, from : "HomeView")
                             .padding(.horizontal)
                     }
                 }

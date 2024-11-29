@@ -19,7 +19,7 @@ struct SearchView: View {
     var body: some View {
         ZStack {
             if showProfileView {
-                ProfileView(fromSearchView: true, showProfileView: $showProfileView, profileUser: $profileUserClicked)
+                ProfileView(fromSearchView: true, showProfileView: $showProfileView, profileUser: profileUserClicked)
                     .transition(.move(edge: .trailing))
                     .onDisappear {
                         print("profileview disappear")
@@ -43,7 +43,7 @@ struct SearchView: View {
             backButton
             searchField
         }
-        .padding(.horizontal)
+        
     }
     
     private var backButton : some View {
@@ -93,6 +93,7 @@ struct SearchView: View {
         .padding(10)
         .background(Color(hex: "#f4f5f7"))
         .cornerRadius(10)
+        .padding(.horizontal)
     }
     
     private var contentView : some View {

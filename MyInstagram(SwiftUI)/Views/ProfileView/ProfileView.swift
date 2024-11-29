@@ -14,7 +14,10 @@ struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
     var fromSearchView = false
     @Binding var showProfileView: Bool
-    @Binding var profileUser: ProfileUser
+//    @Binding var profileUser: ProfileUser
+    var profileUser = ProfileUser()
+    @State private var showDetailPost = false
+    @State private var selectedPost: Post? = nil
     
     let columns: [GridItem] = [
             GridItem(.flexible()),
@@ -30,42 +33,54 @@ struct ProfileView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                headerView()
-                
-                HStack() {
-                    profileImageView()
-                    statsView().padding(.leading, 20)
-                }
-                .padding(.horizontal, 20)
-                
-                actionButtonsView()
-                
-                tabSelectionView()
-                
-                TabView(selection: $viewModel.selectedTab) {
-                    postGridView().tag(0)
-                    Text("Search Content").tag(1)
-                    Text("Profile Content").tag(2)
-                }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                Spacer()
-            }
-            .onChange(of: viewModel.photosPickerItem) { oldValue, newValue in
-                Task {
-                    await viewModel.handlePhotoSelection(newValue)
-                }
-            }
-            .sheet(isPresented: $viewModel.menuButtonClicked) {
-                MenuView(viewModel: viewModel)
-            }
+            ZStack{
+                if showDetailPost {
+                    DetailPostView(
+                        viewModel: viewModel,
+                        showDetailPost: $showDetailPost,
+                        selectedPost: selectedPost,
+                        fromSearchView: fromSearchView,
+                        profileUser: profileUser
+                    )
+                } else {
+                    VStack {
+                        headerView()
+                        
+                        HStack() {
+                            profileImageView()
+                            statsView().padding(.leading, 20)
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        actionButtonsView()
+                        
+                        tabSelectionView()
+                        
+                        TabView(selection: $viewModel.selectedTab) {
+                            postGridView().tag(0)
+                            Text("Search Content").tag(1)
+                            Text("Profile Content").tag(2)
+                        }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                        Spacer()
+                    }
+                    .onChange(of: viewModel.photosPickerItem) { oldValue, newValue in
+                        Task {
+                            await viewModel.handlePhotoSelection(newValue)
+                        }
+                    }
+                    .sheet(isPresented: $viewModel.menuButtonClicked) {
+                        MenuView(viewModel: viewModel)
+                    }
                     
-            .navigationDestination(isPresented: $viewModel.navigateToLoginView) {
-                LoginView()
-                    .navigationBarBackButtonHidden(true)
-            }
-            .onAppear {
-                viewModel.fetchProfileData(fromSearchView, username: profileUser.username)
+                    .navigationDestination(isPresented: $viewModel.navigateToLoginView) {
+                        LoginView()
+                            .navigationBarBackButtonHidden(true)
+                    }
+                    .onAppear {
+                        viewModel.fetchProfileData(fromSearchView, username: profileUser.username)
+                    }
+                }
             }
         }
     }
@@ -86,7 +101,7 @@ struct ProfileView: View {
                         .scaledToFit()
                         .frame(width: 27, height: 27)
                 }
-                .padding()
+                .padding(.horizontal, 20)
             }else{
                 HStack {
                     Text(viewModel.username)
@@ -280,6 +295,8 @@ struct ProfileView: View {
                         .clipped()
                         .onTapGesture {
                             print("post clicked")
+                            selectedPost = post
+                            showDetailPost = true
                         }
                 }
             }
@@ -287,10 +304,10 @@ struct ProfileView: View {
     }
 }
 
-#Preview {
+//#Preview {
 //    ProfileView(viewModel: ProfileViewModel())
-    ProfileView(showProfileView: .constant(false), profileUser: .constant(ProfileUser()))
-}
+//    ProfileView(showProfileView: .constant(false), profileUser: .constant(ProfileUser()))
+//}
 
 struct MenuView: View {
     @ObservedObject var viewModel: ProfileViewModel
