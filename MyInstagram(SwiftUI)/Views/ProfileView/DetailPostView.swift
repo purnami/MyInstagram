@@ -30,7 +30,7 @@ struct DetailPostView: View {
                     let posts = fromSearchView ? viewModel.postsArrayOthers : viewModel.postsArray
                     VStack(alignment: .leading, spacing: 16) {
                         ForEach(posts.sorted(by: { $0.datePost > $1.datePost })) { post in
-                            PostView(post: post, from: "DetailPostView", fromSearchView: fromSearchView, profileUser: profileUser)
+                            PostView(viewModel: viewModel, post: post, from: "DetailPostView", fromSearchView: fromSearchView, profileUser: profileUser)
                                 .padding(.horizontal)
                                 .id(post.id)
                         }

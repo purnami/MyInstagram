@@ -143,7 +143,7 @@ struct ProfileView: View {
             }else{
                 PhotosPicker(selection: $viewModel.photosPickerItem, matching: .images){
                     ZStack{
-                        profileImage(uiImage: viewModel.profileImage ?? UIImage(systemName: "person.crop.circle.fill"))
+                        profileImage(uiImage: viewModel.profileImage[viewModel.username] ?? UIImage(systemName: "person.crop.circle.fill"))
                         if viewModel.isLoadImage {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: .white))

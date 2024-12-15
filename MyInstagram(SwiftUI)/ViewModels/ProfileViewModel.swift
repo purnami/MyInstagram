@@ -8,12 +8,10 @@ import SwiftUI
 import FirebaseAuth
 import PhotosUI
 
-final class ProfileViewModel : ObservableObject {
+final class ProfileViewModel : MainViewModel {
     static let shared = ProfileViewModel()
     
-    @Published var username: String = ""
     @Published var selectedTab = 0
-    @Published var profileImage : UIImage?
     @Published var photosPickerItem : PhotosPickerItem?
     @Published var postsArray: [Post] = []
     @Published var postsArrayOthers: [Post] = []
@@ -26,27 +24,17 @@ final class ProfileViewModel : ObservableObject {
     @Published var isFollowing = false
     @Published var isLoadImage = false
     
-    private var firestoreManager = FirestoreManager()
-    
-    init(){
+    override init() {
+        super.init()
         fetchUsername()
+        fetchProfileImage(username)
         fetchPosts()
-        fetchImage(self.username)
-    }
-    
-    func fetchUsername() {
-        print("fetchUsername")
-        if let email = Auth.auth().currentUser?.email {
-            username = String(email.split(separator: "@").first ?? "")
-            print("Fetched username: \(username)")
-        } else {
-            print("No user is currently logged in.")
-        }
+        
     }
     
     func fetchPosts(){
         Task {
-            firestoreManager.fetchPostsFromSubCollection(with: username) { posts in
+            firestoreManager.fetchPosts(with: username) { posts in
                 DispatchQueue.main.async {
                     self.postsArray = posts
                 }
@@ -56,7 +44,7 @@ final class ProfileViewModel : ObservableObject {
     
     func fetchPosts(username : String){
         Task {
-            firestoreManager.fetchPostsFromSubCollection(with: username) { posts in
+            firestoreManager.fetchPosts(with: username) { posts in
                 DispatchQueue.main.async {
                     self.postsArrayOthers = posts
                 }
@@ -101,7 +89,7 @@ final class ProfileViewModel : ObservableObject {
     }
     
     func fetchFollowing(username : String){
-        print("fetchFollowing(username : String)")
+//        print("fetchFollowing(username : String)")
         Task {
             firestoreManager.fetchFollowing(with: username, completion: { following in
                 DispatchQueue.main.async {
@@ -128,10 +116,10 @@ final class ProfileViewModel : ObservableObject {
     }
     
     func saveProfileImage(image: UIImage?){
-        guard let imageData = image?.jpegData(compressionQuality: 0.8) else {
-            print("Failed to convert image to data.")
-            return
-        }
+//        guard let imageData = image?.jpegData(compressionQuality: 0.8) else {
+//            print("Failed to convert image to data.")
+//            return
+//        }
         
         DispatchQueue.main.async {
             self.isLoadImage = true
@@ -153,10 +141,10 @@ final class ProfileViewModel : ObservableObject {
     }
     
     func saveProfileImage(username: String, image: UIImage?){
-        guard let imageData = image?.jpegData(compressionQuality: 0.8) else {
-            print("Failed to convert image to data.")
-            return
-        }
+//        guard let imageData = image?.jpegData(compressionQuality: 0.8) else {
+//            print("Failed to convert image to data.")
+//            return
+//        }
         
 //        let profileUser = ProfileUser()
 //        profileUser.username = username
@@ -247,10 +235,18 @@ final class ProfileViewModel : ObservableObject {
         }
     }
     
+//    override func fetchProfileImage(_ username: String) {
+//        firestoreManager.fetchImage(username:username) { image in
+//            DispatchQueue.main.async {
+//                self.profileImage[username] = image
+//                self.isLoadImage = false
+//            }
+//        }
+//    }
     func fetchImage(_ username: String){
         firestoreManager.fetchImage(username:username) { image in
             DispatchQueue.main.async {
-                self.profileImage = image
+                self.profileImage[username] = image
                 self.isLoadImage = false
             }
         }
@@ -258,7 +254,7 @@ final class ProfileViewModel : ObservableObject {
     
     func fetchProfileData(_ fromSearchView : Bool, username : String){
         if fromSearchView {
-            print("viewModel.fetchPosts(username: \(username))")
+//            print("viewModel.fetchPosts(username: \(username))")
             fetchPosts(username: username)
             fetchFollowers(username: username)
             fetchFollowing(username: username)

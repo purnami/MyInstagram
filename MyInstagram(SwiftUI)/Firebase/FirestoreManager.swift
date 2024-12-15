@@ -41,6 +41,41 @@ class FirestoreManager: ObservableObject {
         }
     }
     
+    func addStory(image: UIImage, completion: @escaping (Bool) -> Void) {
+        let username = getUsername()
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.1) else {
+            print("Failed to convert image to data.")
+            completion(false)
+            return
+        }
+        
+        let base64ImageString = imageData.base64EncodedString()
+        let documentRef = db.collection("data").document(username).collection("stories").document()
+        
+        let newStory = Story(
+            id: documentRef.documentID,
+            username: username,
+            storyImage: base64ImageString,
+            datePost: Date())
+        
+        do {
+            try documentRef.setData(from: newStory) { error in
+                if let error = error {
+                    print("Error adding story: \(error.localizedDescription)")
+                    completion(false)
+                } else {
+                    print("story added successfully with auto-generated ID: \(newStory.id)")
+                    completion(true)
+                }
+            }
+        } catch {
+            print("Error encoding story: \(error.localizedDescription)")
+            completion(false)
+        }
+        
+    }
+    
     func addFollow(username : String, completion: @escaping (Bool) -> Void) {
         let following = db.collection("data").document(getUsername()).collection("following").document()
         let followers = db.collection("data").document(username).collection("followers").document()
@@ -68,7 +103,7 @@ class FirestoreManager: ObservableObject {
         }
     }
     
-    func fetchPostsFromSubCollection(with username: String, completion: @escaping ([Post]) -> Void) {
+    func fetchPosts(with username: String, completion: @escaping ([Post]) -> Void) {
         guard !username.isEmpty else {
             print("Error: Username is empty.")
             completion([]) // Return an empty array to avoid crashes.
@@ -86,7 +121,7 @@ class FirestoreManager: ObservableObject {
                     let posts = try documents.map { document -> Post in
                         return try document.data(as: Post.self)
                     }
-                    print("Retrieved posts:", posts)
+//                    print("Retrieved posts:", posts)
                     completion(posts)
                 } catch {
                     print("Error decoding posts: \(error.localizedDescription)")
@@ -94,6 +129,37 @@ class FirestoreManager: ObservableObject {
                 }
             } else {
                 print("No posts found")
+                completion([])
+            }
+        }
+    }
+    
+    func fetchStories(with username: String, completion: @escaping ([Story]) -> Void) {
+        guard !username.isEmpty else {
+            print("Error: Username is empty.")
+            completion([]) // Return an empty array to avoid crashes.
+            return
+        }
+        db.collection("data").document(username).collection("stories").getDocuments { snapshot, error in
+            if let error = error {
+                print("Error fetching stories: \(error.localizedDescription)")
+                completion([])
+                return
+            }
+            
+            if let documents = snapshot?.documents {
+                do {
+                    let stories = try documents.map { document -> Story in
+                        return try document.data(as: Story.self)
+                    }
+                    print("Retrieved stories:", stories)
+                    completion(stories)
+                } catch {
+                    print("Error decoding stories: \(error.localizedDescription)")
+                    completion([])
+                }
+            } else {
+                print("No stories found")
                 completion([])
             }
         }
@@ -119,9 +185,9 @@ class FirestoreManager: ObservableObject {
             }
             
             let followers = documents.compactMap { document in
-                print("document.documentID: \(document.documentID)")
+//                print("document.documentID: \(document.documentID)")
                 if let value = document.data()["followers"] as? String {
-                    print("Field value: \(value)")
+//                    print("Field value: \(value)")
                     return value
                 }
                 return nil
@@ -152,9 +218,9 @@ class FirestoreManager: ObservableObject {
             }
             
             let following = documents.compactMap { document in
-                print("document.documentID: \(document.documentID)")
+//                print("document.documentID: \(document.documentID)")
                 if let value = document.data()["following"] as? String {
-                    print("Field value: \(value)")
+//                    print("Field value: \(value)")
                     return value
                 }
                 return nil
@@ -453,9 +519,9 @@ class FirestoreManager: ObservableObject {
         documentRef.getDocument { document, error in
             if let document = document, document.exists {
                 let likes = document.data()?["like"] as? [String] ?? []
-                likes.forEach { like in
-                    print("like \(userID) ",like)
-                }
+//                likes.forEach { like in
+//                    print("like \(userID) ",like)
+//                }
                 if likes.contains(username) {
                     completion(true)
                 } else {
@@ -562,7 +628,7 @@ class FirestoreManager: ObservableObject {
     }
     
     func fetchImage(username: String) async -> UIImage? {
-        print("fetchImage username ", username)
+//        print("fetchImage username ", username)
         let snapshot = try? await db.collection("data").document(username).getDocument()
         
         if let snapshot = snapshot, snapshot.exists,
@@ -579,7 +645,7 @@ class FirestoreManager: ObservableObject {
     }
     
     func fetchImage(username: String, completion: @escaping (UIImage?) -> Void) {
-        print("fetchImage username ", username)
+//        print("fetchImage username ", username)
         db.collection("data").document(username).getDocument { snapshot, error in
             
             if let error = error {
@@ -600,7 +666,50 @@ class FirestoreManager: ObservableObject {
             }
         }
     }
+    
+    func deleteAllStories(completion: @escaping (Bool) -> Void) {
+        let storiesCollection = db.collection("stories")
+        
+        storiesCollection.getDocuments { snapshot, error in
+            if let error = error {
+                print("Error fetching stories: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                completion(true) // No documents to delete, so it's a success
+                return
+            }
+            
+            let batch = self.db.batch()
+            
+            for document in documents {
+                batch.deleteDocument(document.reference)
+            }
+            
+            batch.commit { error in
+                if let error = error {
+                    print("Error deleting all stories: \(error.localizedDescription)")
+                    completion(false)
+                } else {
+                    completion(true)
+                }
+            }
+        }
+    }
 
+    func deleteStory(username: String, documentID: String, completion: @escaping (Bool) -> Void) {
+        let documentRef = db.collection("data").document(getUsername()).collection("stories").document(documentID)
+        documentRef.delete { error in
+            if let error = error {
+                print("Error deleting story: \(error.localizedDescription)")
+                completion(false)
+            } else {
+                completion(true)
+            }
+        }
+    }
 }
 
 
